@@ -12,8 +12,8 @@ using Skolinlämning.Data;
 namespace Skolinlämning.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230601141335_newmigration")]
-    partial class newmigration
+    [Migration("20230601142913_migrationny")]
+    partial class migrationny
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

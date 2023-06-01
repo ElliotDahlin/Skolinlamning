@@ -5,7 +5,7 @@
 namespace Skolinlämning.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class newmigration : Migration
+    public partial class migrationny : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
