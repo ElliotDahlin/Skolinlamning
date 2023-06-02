@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Skolinlämning.Data;
 using Skolinlämning.Models;
 using System.Diagnostics;
 
@@ -7,10 +8,12 @@ namespace Skolinlämning.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        public ApplicationDbContext _context { get; set; }
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
