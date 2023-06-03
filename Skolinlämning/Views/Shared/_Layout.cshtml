@@ -29,7 +29,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Blogg" asp-action="Create">Blogg</a>
                         </li>                      
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin</a>
