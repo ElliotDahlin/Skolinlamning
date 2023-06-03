@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Skolinlämning.Models;
 
 namespace Skolinlämning.Data
 {
@@ -9,5 +10,8 @@ namespace Skolinlämning.Data
             : base(options)
         {
         }
+             
+         public DbSet<BloggPost> Bloggs { get; set; }       
+
     }
 }
