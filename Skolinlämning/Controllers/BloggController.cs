@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Skolinlämning.Data;
 using Skolinlämning.Models;
@@ -15,9 +16,11 @@ namespace Skolinlämning.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Bloggs.ToList());
+            return _context.Bloggs != null ?
+                          View(await _context.Bloggs.ToListAsync()) :
+                          Problem("Entity set 'ApplicationDbContext.Manufacturer'  is null.");
         }
         public IActionResult Create()
         {
@@ -27,10 +30,12 @@ namespace Skolinlämning.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Content")] BloggPost blogg)
+        public async Task<IActionResult> Create([Bind("ID,Title,Content,Author")] BloggPost blogg)
         {
+            
             if (ModelState.IsValid)
             {
+                blogg.Author = User.Identity.Name; // Sätt författaren till den inloggade användarens namn
                 _context.Add(blogg);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Create));
@@ -46,19 +51,20 @@ namespace Skolinlämning.Controllers
                 return NotFound();
             }
 
-            var blog = await _context.Bloggs.FindAsync(id);
-            if (blog == null)
+            var blogg = await _context.Bloggs.FindAsync(id);
+            if (blogg == null)
             {
                 return NotFound();
             }
-            return View(blog);
+            return View(blogg);
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content")] BloggPost blogg)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Content, Author")] BloggPost blogg)
         {
+            
             if (id != blogg.ID)
             {
                 return NotFound();
@@ -87,42 +93,36 @@ namespace Skolinlämning.Controllers
             return View(blogg);
         }
 
-
+        [Authorize (Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!User.IsInRole("Admin")) { return NotFound(); }
             if (id == null)
             {
                 return NotFound();
             }
 
-            var blogg = await _context.Bloggs
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var blogg = await _context.Bloggs.FirstOrDefaultAsync(m => m.ID == id);
             if (blogg == null)
             {
                 return NotFound();
             }
 
-            return View();
+            return View(blogg);
         }
 
-        // POST: Blogg/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Bloggs == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Manufacturer'  is null.");
-            }
-
             var blogg = await _context.Bloggs.FindAsync(id);
 
             if (blogg != null)
             {
                 _context.Bloggs.Remove(blogg);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -130,5 +130,8 @@ namespace Skolinlämning.Controllers
         {
             return _context.Bloggs.Any(e => e.ID == id);
         }
+
+
+
     }
 }
