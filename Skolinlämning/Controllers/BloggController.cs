@@ -38,7 +38,7 @@ namespace Skolinlämning.Controllers
             return View(blogg);
         }
 
-       
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -54,7 +54,7 @@ namespace Skolinlämning.Controllers
             return View(blog);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content")] BloggPost blogg)
@@ -87,7 +87,7 @@ namespace Skolinlämning.Controllers
             return View(blogg);
         }
 
-       
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -110,8 +110,18 @@ namespace Skolinlämning.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (_context.Bloggs == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Manufacturer'  is null.");
+            }
+
             var blogg = await _context.Bloggs.FindAsync(id);
-            _context.Bloggs.Remove(blogg);
+
+            if (blogg != null)
+            {
+                _context.Bloggs.Remove(blogg);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
