@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Skolinlämning.Data;
 
@@ -11,9 +12,11 @@ using Skolinlämning.Data;
 namespace Skolinlämning.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230604172906_ContentMichelleobama")]
+    partial class ContentMichelleobama
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,16 +232,16 @@ namespace Skolinlämning.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("BloggPostID")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("bloggPostID")
+                        .HasColumnType("int");
+
                     b.HasKey("ID");
 
-                    b.HasIndex("BloggPostID");
+                    b.HasIndex("bloggPostID");
 
                     b.ToTable("Author");
                 });
@@ -317,13 +320,13 @@ namespace Skolinlämning.Data.Migrations
 
             modelBuilder.Entity("Skolinlämning.Models.Author", b =>
                 {
-                    b.HasOne("Skolinlämning.Models.BloggPost", "BloggPost")
+                    b.HasOne("Skolinlämning.Models.BloggPost", "bloggPost")
                         .WithMany("Author")
-                        .HasForeignKey("BloggPostID")
+                        .HasForeignKey("bloggPostID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BloggPost");
+                    b.Navigation("bloggPost");
                 });
 
             modelBuilder.Entity("Skolinlämning.Models.BloggPost", b =>

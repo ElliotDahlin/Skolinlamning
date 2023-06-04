@@ -27,13 +27,13 @@ namespace Skolinlämning.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content")] BloggPost blogg)
+        public async Task<IActionResult> Create([Bind("ID,Title,Content")] BloggPost blogg)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(blogg);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Create));
             }
             return View(blogg);
         }

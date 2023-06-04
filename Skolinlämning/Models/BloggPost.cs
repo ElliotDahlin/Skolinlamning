@@ -11,6 +11,8 @@ namespace Skolinlämning.Models
 
         public string Content { get; set; }
 
+        public ICollection<Author> Author { get; set; }
+
         //public string Author { get; set; }
 
         //public DateTime Datetime { get; set; }
