@@ -1,0 +1,24 @@
+﻿@model Skolinlämning.Models.Root
+
+<div class="container mt-3">
+    @if (Model.Drivers != null && Model.Drivers.Any())
+    {
+        // Iterera över varje förare i modellen och visa detaljerna
+        foreach (var driver in Model.Drivers)
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@driver.GivenName @driver.FamilyName</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@driver.Nationality</h6>
+                    <p class="card-text">ID: @driver.DriverId</p>
+                    <p class="card-text">Permanent Number: @driver.PermanentNumber</p>
+                    <p class="card-text">DOB: @driver.DateOfBirth</p>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No driver details found.</p>
+    }
+</div>

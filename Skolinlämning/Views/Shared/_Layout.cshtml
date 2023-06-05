@@ -37,6 +37,13 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Api" asp-action="DriverDetails">Driver</a>
+                            </li>
+                        }
+                            
+                        @if (User.Identity.IsAuthenticated)
+                        {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Race Info</a>
                                 <div class="dropdown-menu">
