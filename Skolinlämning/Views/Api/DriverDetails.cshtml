@@ -1,11 +1,26 @@
 ﻿@model IEnumerable<Skolinlämning.Models.Driver>
+@using (Html.BeginForm("DriverDetails", "Api", FormMethod.Get))
+{
+    <form class="form-row" asp-controller="Api" asp-action="DriverDetails" method="post">
+        <div class="col">
+            <input type="text" class="form-control mt-3" placeholder="Search" name="SearchTerm" />
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary mt-2" style="width: 150px; height: 50px;">Search</button>
+            <a asp-action="DriverDetails" class="btn btn-outline-danger mx-0 mt-2">Back to List</a>
+            <h2 style="text-decoration: underline #d9534f " class="text-center">Driver Details</h2>
+        </div>
+    </form>
 
-<div class="container mt-5">
-    <h2 class="text-center">Driver Details</h2>
+
+}
+<div class="container mt-3">
+    
+
 
     @if (Model != null && Model.Any())
     {
-        <div class="row justify-content-around flex-wrap">
+        <div class="row justify-content-around flex-wrap mt-4">
             @foreach (var driver in Model)
             {
                 <div class="col-12 col-md-6 col-lg-4 mb-4">

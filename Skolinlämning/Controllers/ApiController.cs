@@ -31,7 +31,7 @@ namespace Skolinlämning.Controllers
         {
             var drivers = await _apiService.GetDriversAsync();
 
-            // filter out drivers based on the search term
+            
             if (!string.IsNullOrEmpty(driverTable.SearchTerm))
             {
                 drivers = drivers.Where(d =>
