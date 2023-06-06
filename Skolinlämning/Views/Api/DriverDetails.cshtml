@@ -1,24 +1,33 @@
-﻿@model Skolinlämning.Models.Root
+﻿@model IEnumerable<Skolinlämning.Models.Driver>
 
-<div class="container mt-3">
-    @if (Model.Drivers != null && Model.Drivers.Any())
+<div class="container mt-5">
+    <h2 class="text-center">Driver Details</h2>
+
+    @if (Model != null && Model.Any())
     {
-        // Iterera över varje förare i modellen och visa detaljerna
-        foreach (var driver in Model.Drivers)
+        foreach (var driver in Model)
         {
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">@driver.GivenName @driver.FamilyName</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">@driver.Nationality</h6>
-                    <p class="card-text">ID: @driver.DriverId</p>
-                    <p class="card-text">Permanent Number: @driver.PermanentNumber</p>
-                    <p class="card-text">DOB: @driver.DateOfBirth</p>
+            <div class="row justify-content-center mt-5">
+                <div class="col-md-4">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title text-dark">@driver.GivenName @driver.FamilyName</h5>
+                            <h6 class="card-subtitle text-dark mb-2 text-muted">@driver.Nationality</h6>
+                            <p class="card-text text-dark">ID: @driver.DriverId</p>
+                            <p class="card-text text-dark">Permanent Number: @driver.PermanentNumber</p>
+                            <p class="card-text text-dark">DOB: @driver.DateOfBirth</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         }
     }
     else
     {
-        <p>No driver details found.</p>
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-4">
+                <p>No driver details found.</p>
+            </div>
+        </div>
     }
 </div>

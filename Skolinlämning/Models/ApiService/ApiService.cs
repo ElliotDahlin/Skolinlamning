@@ -12,14 +12,16 @@ public class ApiService
         _httpClient = httpClient;
     }
 
-    public async Task<Root> GetDriversAsync()
+    public async Task<IEnumerable<Driver>> GetDriversAsync()
     {
         var response = await _httpClient.GetAsync("https://ergast.com/api/f1/2023/drivers.json");
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
-        var drivers = JsonConvert.DeserializeObject<Root>(content);
+        var apiResponse = JsonConvert.DeserializeObject<ApiResponse>(content);
 
-        return drivers;
+        return apiResponse.MRData.DriverTable.Drivers;
     }
+
+
 }
