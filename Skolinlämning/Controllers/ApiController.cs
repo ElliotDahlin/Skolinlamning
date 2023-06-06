@@ -22,12 +22,37 @@ namespace Skolinlämning.Controllers
             _apiService = new ApiService(httpClient);
         }
 
-        public async Task<IActionResult> DriverDetails()
+
+
+
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> DriverDetails(DriverTable driverTable)
         {
             var drivers = await _apiService.GetDriversAsync();
-            Debug.WriteLine(drivers);
+
+            // filter out drivers based on the search term
+            if (!string.IsNullOrEmpty(driverTable.SearchTerm))
+            {
+                drivers = drivers.Where(d =>
+                    (d.DriverId != null && d.DriverId.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (d.PermanentNumber != null && d.PermanentNumber.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (d.Code != null && d.Code.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (d.Url != null && d.Url.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (d.GivenName != null && d.GivenName.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (d.FamilyName != null && d.FamilyName.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (d.DateOfBirth != null && d.DateOfBirth.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (d.Nationality != null && d.Nationality.Contains(driverTable.SearchTerm, StringComparison.OrdinalIgnoreCase))
+                    ).ToList();
+            }
+
             return View(drivers);
         }
+
+
+
+
+
     }
 
     
