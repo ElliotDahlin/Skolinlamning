@@ -6,10 +6,11 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Xml.Linq;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace Skolinlämning.Controllers
 {
+    [Authorize]
     public class ApiController : Controller
     {
         public IActionResult Index()

@@ -7,6 +7,7 @@ using System.Reflection.Metadata;
 
 namespace Skolinlämning.Controllers
 {
+    [Authorize]
     public class BloggController : Controller
     {
         private readonly ApplicationDbContext _context;
