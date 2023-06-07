@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using Skolinlämning.Models;
 using System.Collections.Generic;
 
@@ -6,11 +7,18 @@ using System.Collections.Generic;
 public class ApiService
 {
     private readonly HttpClient _httpClient;
+    internal object httpClient;
 
     public ApiService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
+
+    public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
+    {
+        return await _httpClient.SendAsync(request);
+    }
+
 
     public async Task<IEnumerable<Driver>> GetDriversAsync()
     {
@@ -22,6 +30,10 @@ public class ApiService
 
         return apiResponse.MRData.DriverTable.Drivers;
     }
+
+
+
+
 
 
 }

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Xml.Linq;
+
 
 namespace Skolinlämning.Controllers
 {
@@ -31,7 +33,7 @@ namespace Skolinlämning.Controllers
         {
             var drivers = await _apiService.GetDriversAsync();
 
-            // filter out drivers based on the search term
+           
             if (!string.IsNullOrEmpty(driverTable.SearchTerm))
             {
                 drivers = drivers.Where(d =>
@@ -50,13 +52,26 @@ namespace Skolinlämning.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> RaceDetails()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "http://ergast.com/api/f1/current.json");
+            HttpResponseMessage response = await _apiService.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseString = await response.Content.ReadAsStringAsync();
+                var apiRaceResponse = JsonConvert.DeserializeObject<ApiRaceResponse>(responseString);
+                return View(apiRaceResponse.MRData.RaceTable.Races);
+            }
+
+            return View("NotFound");
+        }
+
 
 
 
     }
-
-
-
 
 }
 
