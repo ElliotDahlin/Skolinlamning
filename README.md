@@ -14,6 +14,9 @@ Följ stegen nedan för att ladda ner och installera applikationen:
 
 1. Klona projektet från GitHub-repositoriet:
 2. Navigera till projektmappen:
+4. Installera Nugetspaket: Microsoft.AspNet.WebApi.Client, Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore,
+Microsoft.AspNetCore.Identity.EntityFrameworkCore, Microsoft.AspNetCore.Identity.UI, Microsoft.EntityFrameworkCore.SqlServer, 
+Microsoft.EntityFrameworkCore.Tools, Microsoft.VisualStudio.Web.CodeGeneration.Design
 3. Uppdatera databasen:
 
 Detta kommer att skapa den nödvändiga databasen för applikationen.
