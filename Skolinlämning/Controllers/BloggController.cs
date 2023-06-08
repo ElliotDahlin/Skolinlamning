@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Skolinlämning.Data;
@@ -19,31 +20,28 @@ namespace Skolinlämning.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return _context.Bloggs != null ?
-                          View(await _context.Bloggs.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Manufacturer'  is null.");
+            var bloggs = await _context.Bloggs.ToListAsync();
+            return View(bloggs);
         }
+
         public IActionResult Create()
         {
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Content,Author")] BloggPost blogg)
+        public async Task<IActionResult> Create([Bind("ID,Title,Content")] BloggPost blogg)
         {
-            
             if (ModelState.IsValid)
             {
                 blogg.Author = User.Identity.Name; // Sätt författaren till den inloggade användarens namn
                 _context.Add(blogg);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Create));
+                return RedirectToAction(nameof(Index));
             }
             return View(blogg);
         }
-
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -57,15 +55,20 @@ namespace Skolinlämning.Controllers
             {
                 return NotFound();
             }
+
+            // Kontrollera om användaren är ägaren till blogginlägget
+            if (blogg.Author != User.Identity.Name)
+            {
+                return Unauthorized();
+            }
+
             return View(blogg);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Content, Author")] BloggPost blogg)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Content")] BloggPost blogg)
         {
-            
             if (id != blogg.ID)
             {
                 return NotFound();
@@ -75,7 +78,17 @@ namespace Skolinlämning.Controllers
             {
                 try
                 {
-                    _context.Update(blogg);
+                    // Kontrollera om användaren är ägaren till blogginlägget
+                    var existingBlogg = await _context.Bloggs.FirstOrDefaultAsync(b => b.ID == id && b.Author == User.Identity.Name);
+                    if (existingBlogg == null)
+                    {
+                        return Unauthorized();
+                    }
+
+                    existingBlogg.Title = blogg.Title;
+                    existingBlogg.Content = blogg.Content;
+
+                    _context.Update(existingBlogg);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -94,10 +107,9 @@ namespace Skolinlämning.Controllers
             return View(blogg);
         }
 
-        [Authorize (Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (!User.IsInRole("Admin")) { return NotFound(); }
             if (id == null)
             {
                 return NotFound();
@@ -109,6 +121,12 @@ namespace Skolinlämning.Controllers
                 return NotFound();
             }
 
+            // Kontrollera om användaren är ägaren till blogginlägget eller en administratör
+            if (blogg.Author != User.Identity.Name && !User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
             return View(blogg);
         }
 
@@ -117,6 +135,12 @@ namespace Skolinlämning.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var blogg = await _context.Bloggs.FindAsync(id);
+
+            // Kontrollera om användaren är ägaren till blogginlägget eller en administratör
+            if (blogg.Author != User.Identity.Name && !User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
 
             if (blogg != null)
             {
@@ -131,8 +155,5 @@ namespace Skolinlämning.Controllers
         {
             return _context.Bloggs.Any(e => e.ID == id);
         }
-
-
-
     }
 }
